@@ -45,41 +45,41 @@ auto fileSearcher = [](const string &line, const string &pattern, int &counter, 
  
 string createBuffer(int bufferSize,ifstream & fileStream, int back){
     string line;
-    line.resize(bufferSize);
-    fileStream.read(&line[0],bufferSize);
+    line.resize(bufferSize + back);
     fileStream.seekg(-back,ios_base::cur);
+    fileStream.read(&line[0],bufferSize + back);
     return line;
 }
 
-int printResult(int rowsCounter,int firstThreadCounter,int secondThreadCounter){
+bool printResult(int rowsCounter,int firstThreadCounter,int secondThreadCounter){
     if (niddleFoundAt == 0) {
         std::cout << "Pattern found at line " << rowsCounter + firstThreadCounter << endl;
-        return 1;
+        return true;
     } else if (niddleFoundAt == 1) {
         std::cout << "Pattern found at line " << rowsCounter + firstThreadCounter + secondThreadCounter << endl;
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 void find(ifstream & fileStream,string pattern){
     size_t rowsCounter = 1;
-    int overlap = 0;
+    int overlap = 0;    //Init for first iteration
     while (fileStream) {
         size_t bufferSize = 1024 * 1024 + overlap;
         string line1 = createBuffer(bufferSize,fileStream,overlap);
-        string line2= createBuffer(bufferSize + pattern.length(),fileStream, pattern.length());
+        string line2= createBuffer(bufferSize,fileStream, pattern.length());
         int firstThreadCounter = 0,secondThreadCounter = 0;
         std::thread first(fileSearcher, line1, pattern, std::ref(firstThreadCounter), 0, overlap);
         std::thread second(fileSearcher, line2, pattern, std::ref(secondThreadCounter), 1, pattern.length());
         first.join();
         second.join();
-        overlap = pattern.size();
+        overlap = pattern.length(); //For the rest of the iteration.
         if(printResult(rowsCounter,firstThreadCounter,secondThreadCounter))
             return;
         rowsCounter += firstThreadCounter + secondThreadCounter;
     }
-    cout << "pattern wasn't found at this text file!";
+    cout << "pattern wasn't found at this text file!\n";
 }
 
 int main(int argc, char *argv[])
