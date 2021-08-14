@@ -6,7 +6,6 @@ niddleInHayStack is a cpp script for searching patterns in large text files.
 
 Download the .cpp file and compile it using g++ or any other C++ compilar.
 
-For your convenience run the python script the generate a test file of 2gb.
 
 ```bash
 g++ -o find .\find.cpp
@@ -17,6 +16,7 @@ g++ -o find .\find.cpp
 ```bash
 ./find <pattern> <file_path>
 ```
+For your convenience run the python script the generate a test file of 2gb.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
