@@ -62,7 +62,7 @@ int find(ifstream & fileStream,string pattern){
     size_t rowsCounter = 1;
     int overlap = 0;    //Init for first iteration
     while (fileStream) {
-        size_t bufferSize = 1024 * 1024 + overlap;
+        size_t bufferSize = 1024 * 1024;
         string line1 = createBuffer(bufferSize,fileStream,overlap);
         string line2= createBuffer(bufferSize,fileStream, pattern.length());
         int firstThreadCounter = 0,secondThreadCounter = 0;
