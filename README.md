@@ -1,6 +1,6 @@
-# niddleInHayStack
+# needleInHayStack
 
-niddleInHayStack is a cpp script for searching patterns in large text files.
+needleInHayStack is a cpp script for searching patterns in large text files.
 
 ## Installation
 
