@@ -51,18 +51,14 @@ string createBuffer(int bufferSize,ifstream & fileStream, int back){
     return line;
 }
 
-bool printResult(int rowsCounter,int firstThreadCounter,int secondThreadCounter){
-    if (niddleFoundAt == 0) {
-        std::cout << "Pattern found at line " << rowsCounter + firstThreadCounter << endl;
-        return true;
-    } else if (niddleFoundAt == 1) {
-        std::cout << "Pattern found at line " << rowsCounter + firstThreadCounter + secondThreadCounter << endl;
-        return true;
-    }
-    return false;
+int calcRowCounter(int rowsCounter,int firstThreadCounter,int secondThreadCounter){
+    if (niddleFoundAt == 0) 
+        return rowsCounter + firstThreadCounter;
+    else 
+        return rowsCounter + firstThreadCounter + secondThreadCounter;
 }
 
-void find(ifstream & fileStream,string pattern){
+int find(ifstream & fileStream,string pattern){
     size_t rowsCounter = 1;
     int overlap = 0;    //Init for first iteration
     while (fileStream) {
@@ -75,11 +71,19 @@ void find(ifstream & fileStream,string pattern){
         first.join();
         second.join();
         overlap = pattern.length(); //For the rest of the iteration.
-        if(printResult(rowsCounter,firstThreadCounter,secondThreadCounter))
-            return;
+        if(niddleFoundAt > -1){
+            return calcRowCounter(rowsCounter,firstThreadCounter,secondThreadCounter);
+        }
         rowsCounter += firstThreadCounter + secondThreadCounter;
     }
-    cout << "pattern wasn't found at this text file!\n";
+    return -1;
+}
+
+void printResult(int res){
+    if (res == -1)
+        cout << "Pattern wasn't found at the text file\n";
+    else
+        cout << "Pattern first occur at line " << res << "\n";
 }
 
 int main(int argc, char *argv[])
@@ -91,7 +95,7 @@ int main(int argc, char *argv[])
     auto t1 = high_resolution_clock::now(); //Performance measurement
     ifstream fileStream(argv[2]);
     string pattern = argv[1];
-    find(fileStream,pattern); 
+    printResult(find(fileStream,pattern));
     auto t2 = high_resolution_clock::now();
     auto ms_int = duration_cast<milliseconds>(t2 - t1);
     cout <<"Runtime is " << ms_int.count() << " miliseconds\n";
