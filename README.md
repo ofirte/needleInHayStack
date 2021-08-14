@@ -16,7 +16,7 @@ g++ -o find .\find.cpp
 ```bash
 ./find <pattern> <file_path>
 ```
-For your convenience run the python script the generate a test file of 2gb.
+For your convenience run the python script the generate a test file of 2GB.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
